@@ -1,12 +1,17 @@
 ################################################################################
 #a
-positions <- c('UR Developers', 'Back-end Developers',
-               'magangement', 'HR', 'HSE')
+positions <- c('UR Developers', 'Back-end Developers', 'magangement', 'HR', 'HSE')
 counts <- c(8, 12, 4, 3, 3)
 ################################################################################
 #b
 
-barplot(counts, names.arg = positions)
+barplot(counts,
+        names.arg = positions,
+        main = "Bar chart of distribution of employees in different positions",
+        xlab = "position name",
+        ylab = "count",
+        col.main = "red",
+        col.lab = "blue")
 ################################################################################
 #c
 
@@ -18,20 +23,36 @@ hr_salaries <- c(45000, 39000, 30000)
 hse_salareis <- c(12000, 25000, 31500)
 
 boxplot(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis,
+        main = "Box plot of salaries of each position",
+        xlab = "position name",
+        ylab = "salary",
+        col.main = "red",
+        col.lab = "blue",
         names = positions)
 ################################################################################
 #d
 
 print_spread_measures <- function(pos, salaries) {
   quantiles = quantile(salaries, names=FALSE);
+  min = min(salaries)
   Q1 = quantiles[2]
   mean = quantiles[3]
   Q3 = quantiles[4]
+  max = max(salaries)
   iqr = Q3 - Q1
+  upper_whisker = min(Q3 + 1.5*iqr, max)
+  lower_whisker = max(Q1 - 1.5*iqr, min)
+  outliers = salaries[salaries > upper_whisker | salaries < lower_whisker]
+  cat('\t min value:', min, '\n')
   cat('\t first quartile:', Q1, '\n')
   cat('\t second quartile(mean):', mean, '\n')
   cat('\t third quartile:', Q3, '\n')
   cat('\t IQR:', iqr, '\n')
+  cat('\t max value:', max, '\n')
+  if(length(outliers) > 0)
+    cat('\t outliers:', outliers, '\n')
+  else
+    cat('\t outliers: no outliers \n')
   cat("------------------------------------------------------------------\n")
 }
 
@@ -44,8 +65,12 @@ for (i in 1:5) {
 #e
 
 plot_hist_density <- function(pos, salaries) {
-  hist(uid_salaries, main=paste("Histogram and Density For", pos), border="black", prob=TRUE)
-  lines(density(uid_salaries))
+  hist(uid_salaries,
+       main=paste("Histogram and Density For", pos),
+       xlab=paste(pos, "Salaries"),
+       border="black",
+       prob=TRUE)
+  lines(density(uid_salaries), col="blue", lwd=2)
 }
 for (i in 1:5) {
   plot_hist_density(positions[i], all_position_salaries[[i]])
