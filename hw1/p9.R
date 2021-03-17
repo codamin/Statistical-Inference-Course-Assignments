@@ -31,16 +31,6 @@ boxplot(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis,
         names = positions)
 ################################################################################
 #d
-all_position_salaries = list(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis)
-
-for (i in 1:5) {
-  if(median(all_position_salaries[[i]]) > mean(all_position_salaries[[i]]))
-    cat(positions[i], "salaries distribution is left-skewed", '\n')
-  else
-    if(median(all_position_salaries[[i]]) < mean(all_position_salaries[[i]]))
-      cat(positions[i], "salaries distribution is right-skewed", '\n')
-}
-
 
 print_spread_measures <- function(pos, salaries) {
   quantiles = quantile(salaries, names=FALSE);
@@ -74,6 +64,15 @@ for (i in 1:5) {
 }
 ################################################################################
 #e
+all_position_salaries = list(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis)
+
+for (i in 1:5) {
+  if(median(all_position_salaries[[i]]) > mean(all_position_salaries[[i]]))
+    cat(positions[i], "salaries distribution is left-skewed", '\n')
+  else
+    if(median(all_position_salaries[[i]]) < mean(all_position_salaries[[i]]))
+      cat(positions[i], "salaries distribution is right-skewed", '\n')
+}
 
 plot_hist_density <- function(pos, salaries) {
   hist(salaries,
