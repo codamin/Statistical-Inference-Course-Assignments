@@ -1,6 +1,6 @@
 ################################################################################
 #a
-positions <- c('UR Developers', 'Back-end Developers', 'magangement', 'HR', 'HSE')
+positions <- c('UI Developers', 'Back-end Developers', 'magangement', 'HR', 'HSE')
 counts <- c(8, 12, 4, 3, 3)
 ################################################################################
 #b
@@ -10,7 +10,7 @@ barplot(counts,
         main = "Bar chart of distribution of employees in different positions",
         xlab = "position name",
         ylab = "count",
-        col.main = "red",
+        col.main = "green",
         col.lab = "blue")
 ################################################################################
 #c
@@ -26,11 +26,21 @@ boxplot(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis,
         main = "Box plot of salaries of each position",
         xlab = "position name",
         ylab = "salary",
-        col.main = "red",
+        col.main = "green",
         col.lab = "blue",
         names = positions)
 ################################################################################
 #d
+all_position_salaries = list(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis)
+
+for (i in 1:5) {
+  if(median(all_position_salaries[[i]]) > mean(all_position_salaries[[i]]))
+    cat(positions[i], "salaries distribution is left-skewed", '\n')
+  else
+    if(median(all_position_salaries[[i]]) < mean(all_position_salaries[[i]]))
+      cat(positions[i], "salaries distribution is right-skewed", '\n')
+}
+
 
 print_spread_measures <- function(pos, salaries) {
   quantiles = quantile(salaries, names=FALSE);
@@ -49,6 +59,8 @@ print_spread_measures <- function(pos, salaries) {
   cat('\t third quartile:', Q3, '\n')
   cat('\t IQR:', iqr, '\n')
   cat('\t max value:', max, '\n')
+  
+  #%%%%%%%%%%%%%%%%%%%%%%%%% CALCULATION OF FINDING OUTLIERS %%%%%%%%%%%%%%%%%%%%%%%%%
   if(length(outliers) > 0)
     cat('\t outliers:', outliers, '\n')
   else
@@ -56,7 +68,6 @@ print_spread_measures <- function(pos, salaries) {
   cat("------------------------------------------------------------------\n")
 }
 
-all_position_salaries = list(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis)
 for (i in 1:5) {
   cat('Quartiles for', positions[i], ' salaries:\n')
   print_spread_measures(positions[i], all_position_salaries[[i]])
@@ -65,12 +76,15 @@ for (i in 1:5) {
 #e
 
 plot_hist_density <- function(pos, salaries) {
-  hist(uid_salaries,
+  hist(salaries,
        main=paste("Histogram and Density For", pos),
        xlab=paste(pos, "Salaries"),
        border="black",
-       prob=TRUE)
-  lines(density(uid_salaries), col="blue", lwd=2)
+       prob=TRUE,
+       ylim=c(0, 0.00008),
+       col="yellow2")
+  
+  lines(density(salaries), col="blue", lwd=3)
 }
 for (i in 1:5) {
   plot_hist_density(positions[i], all_position_salaries[[i]])
@@ -80,15 +94,19 @@ for (i in 1:5) {
 
 all_salaries = c(uid_salaries, bed_salaries, mng_salaries, hr_salaries, hse_salareis)
 sal_group1 <- sum(all_salaries > 50000)
-sal_group2 <- sum(all_salaries > 40000 & all_salaries < 50000)
-sal_group3 <- sum(all_salaries > 30000 & all_salaries < 40000)
-sal_group4 <- sum(all_salaries > 20000 & all_salaries < 30000)
+sal_group2 <- sum(all_salaries > 40000 & all_salaries <= 50000)
+sal_group3 <- sum(all_salaries > 30000 & all_salaries <= 40000)
+sal_group4 <- sum(all_salaries > 20000 & all_salaries <= 30000)
 sal_group5 <- sum(all_salaries <= 20000)
+
 colors <- c("azure", "yellow1", "tomato", "orange1", "blue")
 labels <- c("very high", "high", "middle", "low", "very low")
+
 slices <- c(sal_group1, sal_group2, sal_group3, sal_group4, sal_group5)
+
 percents <- round(slices/sum(slices)*100)
 percents <- paste(percents,"%", sep="")
+
 pie(slices, col=colors, labels=percents, radius=0.6, main="Pie Chart of Salaries")
 legend("topleft", labels, fill=colors)
 ################################################################################
