@@ -15,16 +15,13 @@ show(p_a)
 
 
 # c
+model <- lm(formula = carb ~ calories, starbucks)
 p_c <- p_a + stat_smooth(method = lm, se = FALSE)
-
 show(p_c)
-  
 
-lreg <- lm(calories ~ carb, data=starbucks)
+#e
+summary(model)
 
-autoplot(fit)
-# ggplot(lreg, aes(x = .fitted, y = .resid)) +
-#   geom_point()
-# 
-# 
-# lreg$fitted
+# f
+p_f <- autoplot(model)
+show(p_f)
